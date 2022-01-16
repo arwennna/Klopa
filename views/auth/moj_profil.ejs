@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/footer.css' />
+    <link rel="icon" href="/images/ikonica.png">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="text-transform: uppercase">
+      <a class="navbar-brand" href="#"><i class="fas fa-utensils"></i> <%= title %></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/odjava"><i class="fas fa-sign-out-alt"></i> Odjava
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/glavna"> Glavna
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row mt-5">
+      <div class="col-md-6 m-auto">
+        <div class="card card-body">
+            <h1><%= korisnik.korisnik_ime %></h1>
+            <h3>
+            <% switch (korisnik.korisnik_tip) {
+            case 1: %>
+            Superadmin
+            <% break;
+
+            case 2: %>
+            Admin
+            <% break;
+
+            case 3: %>
+            Dostavljač
+            <% break;
+
+            case 4: %>
+            Kupac
+            <% break;
+
+            } %>
+            </h3>
+          <div class="col-md-12">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Ime:</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <%= korisnik.korisnik_ime %>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Prezime:</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <%= korisnik.korisnik_prezime %>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Email:</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <%= korisnik.korisnik_mail %>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+
+                    <h6 class="mb-0">Unos adrese:</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <% if (korisnik.korisnik_long == null) { %>
+                      <a href="/adresa"> Unesite adresu! </a>
+                    <%} else if (korisnik.korisnik_long != null) {%>
+                      <p> Adresa je unešena. </p>
+                    <%} %>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" style="margin-top: 120px">
+      <div class="container">
+        <div class="row p-1">
+          <div class="col-4 footer-link" >
+            <a href="https://twitter.com/Klopa_ba">
+              <i class="fab fa-twitter-square"></i>
+              Twitter
+            </a>
+          </div>
+          <div class="col-4 footer-link">
+            <a href="https://www.facebook.com/profile.php?id=100066673272409">
+              <i class="fab fa-facebook-square"></i>
+              Facebook
+            </a>
+          </div>
+          <div class="col-4 footer-link">
+            <a href="https://www.instagram.com/klopa.ba/">
+              <i class="fab fa-instagram"></i>
+              Instagram
+            </a>
+          </div>
+        </div>
+        <div class="row p-1">
+          <div class="col">
+            Copyright 2021 <i class="far fa-copyright"></i> <a href="https://www.linkedin.com/in/sara-farah-materne-2685141b3/">Sara-Farah Materne</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/footer.css' />
+  <link rel="icon" href="/images/ikonica.png">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="text-transform: uppercase">
+  <a class="navbar-brand" href="#"><i class="fas fa-utensils"></i> <%= title %></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/odjava"><i class="fas fa-sign-out-alt"></i> Odjava
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mojprofil"><i class="fas fa-user-circle"></i> Moj profil
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/glavna">Glavna</a>
+      </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/administracija">Administracija</a>
+        </li>
+    </ul>
+  </div>
+</nav>
+
+
+
+<div class="container">
+    <div class="row p-3">
+        <div class="col justify-content-lg-center">
+
+            <div class="card text-white bg-primary mb-3" style="max-width: 920px; width: 100%; margin: auto">
+                <h3 class="card-header">Unos novog grupnog menija</h3>
+                <div class="card-body">
+                    <form action="/create/meni" method="POST" id="forma_create_menu" enctype="multipart/form-data">
+                        <fieldset>
+                            <legend>Novi meni</legend>
+
+                            <div class="form-group">
+                                <label>Naziv menija</label>
+                                <input type="text" class="form-control" id="imeMenija" name="ime" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Prvi artikal</label>
+                                <select class="form-control" id="artikal1" name="artikal1" required>
+                                    <% for(let j = 0; j < artikli.length; j++) { %>
+                                        <option value='<%= artikli[j].artikal_naziv%>'><%= artikli[j].artikal_naziv %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Drugi artikal</label>
+                                <select class="form-control" id="artikal2" name="artikal2" required>
+                                    <% for(let j = 0; j < artikli.length; j++) { %>
+                                        <option value='<%= artikli[j].artikal_naziv%>'><%= artikli[j].artikal_naziv %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Treći artikal</label>
+                                <select class="form-control" id="artikal3" name="artikal3">
+                                    <% for(let j = 0; j < artikli.length; j++) { %>
+                                        <option value='<%= artikli[j].artikal_naziv%>'><%= artikli[j].artikal_naziv %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Četvrti artikal</label>
+                                <select class="form-control" id="artikal4" name="artikal4">
+                                    <% for(let j = 0; j < artikli.length; j++) { %>
+                                        <option value='<%= artikli[j].artikal_naziv%>'><%= artikli[j].artikal_naziv %></option>
+                                    <% } %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Cijena</label>
+                                <input type="number" class="form-control" id="cijenaArtikla"  name="cijena" required>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="myImage" id="myImage" accept="image/*">
+                                    <label class="custom-file-label">Slika</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-secondary" id="dugmic">Unesi!</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="container">
+        <div class="row p-1">
+            <div class="col-4 footer-link" >
+                <a href="https://twitter.com/Klopa_ba">
+                    <i class="fab fa-twitter-square"></i>
+                    Twitter
+                </a>
+            </div>
+            <div class="col-4 footer-link">
+                <a href="https://www.facebook.com/profile.php?id=100066673272409">
+                    <i class="fab fa-facebook-square"></i>
+                    Facebook
+                </a>
+            </div>
+            <div class="col-4 footer-link">
+                <a href="https://www.instagram.com/klopa.ba/">
+                    <i class="fab fa-instagram"></i>
+                    Instagram
+                </a>
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col">
+                Copyright 2021 <i class="far fa-copyright"></i> <a href="https://www.linkedin.com/in/sara-farah-materne-2685141b3/">Sara-Farah Materne</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

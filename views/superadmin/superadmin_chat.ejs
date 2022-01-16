@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/stylesheets/chatstyle.css'/>
+  <link rel="icon" href="/images/ikonica.png">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="text-transform: uppercase">
+  <a class="navbar-brand" href="#"><i class="fas fa-utensils"></i> <%= title %></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/odjava"><i class="fas fa-sign-out-alt"></i> Odjava
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mojprofil"><i class="fas fa-user-circle"></i> Moj profil
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/glavna"> Glavna
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container container-md">
+
+  <input type="text" id="getIme" style="display: none" value="<%=korisnik.korisnik_ime%>">
+
+  <div class="row p-3">
+    <div class="col-md-10 m-auto">
+      <section class="msger">
+        <header class="msger-header">
+          <div class="msger-header-title">
+            <i class="fas fa-comment-alt"></i>
+          </div>
+        </header>
+
+        <main class="msger-chat">
+
+        </main>
+
+        <form class="msger-inputarea">
+          <input type="text" class="msger-input" placeholder="Nova poruka..." id="unos">
+          <button class="btn btn-primary" type="submit">Pošalji</button>
+        </form>
+      </section>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/javascripts/superadmin_chat.js"></script>
+
+
+</body>
+</html>

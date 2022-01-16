@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/footer.css' />
+    <link rel="icon" href="/images/ikonica.png">
+
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="text-transform: uppercase;">
+    <a class="navbar-brand" href="#"><%= title %></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/odjava"><i class="fas fa-sign-out-alt"></i> Odjava
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/mojprofil"><i class="fas fa-user-circle"></i> Moj profil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/glavna"> Glavna
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/administracija"> Administracija
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/chat"> Korisnička podrška
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/izvjestaj/superadmin"> Izvještaj
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<container class="container-fluid">
+
+    <div class="row p-3" style="height: 260px; background-image: url('https://wallpaperaccess.com/full/2567134.jpg?fbclid=IwAR0vyoxg-_xTOwXFE2bdVo8m3So7VY7_EQgOa9kjQdwvjwx2VKZjw8mbdkA'); opacity: 75%; background-size: cover; " >
+
+        <div class="col">
+            <div class="row p-3">
+                <h1 style="color: white"><%=restoran.restoran_naziv%></h1>
+            </div>
+
+            <div class="row p-3">
+                <h3 style="color: white"><%=restoran.restoran_tip_lookup_naziv%></h3>
+            </div>
+
+            <div class="row p-3">
+                <h3 style="color: white"><%=restoran.restoran_ulica%>, Sarajevo</h3>
+            </div>
+
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="sviArtikli-tab" data-toggle="tab" href="#sviArtikli" role="tab" aria-controls="sviArtikli" aria-selected="true" style="font-size: larger">Svi artikli</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="grupniMeniji-tab" data-toggle="tab" href="#grupniMeniji" role="tab" aria-controls="grupniMeniji" aria-selected="false" style="font-size: larger">Grupni meniji</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="spisakAkcija-tab" data-toggle="tab" href="#spisakAkcija" role="tab" aria-controls="spisakAkcija" aria-selected="false" style="font-size: larger">Spisak akcija</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="najpopularniji-tab" data-toggle="tab" href="#najpopularniji" role="tab" aria-controls="najpopularniji" aria-selected="false" style="font-size: larger">Najpopularnije</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <!----------------------------------------Prvi tab--------------------------------------------------------->
+        <div class="tab-pane fade show active" id="sviArtikli" role="tabpanel" aria-labelledby="sviArtikli-tab">
+            <container class="container-fluid container-sm">
+                <div class="row p-3">
+                    <div class="col justify-content-lg-center">
+
+                        <ul id="listaArtikala" style="list-style-type:none;">
+                            <% for(let j = 0; j < artikli.length; j++) { %>
+                                <li>
+                                    <% if(artikli[j].artikal_akcija) { %>
+                                    <div class="card text-white bg-danger mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                        <div class="card-body">
+
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <img src="/images/<%=artikli[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                                </div>
+
+                                                <div class="col-lg-6">
+
+                                                    <div class="row p-1">
+                                                        <h2><%= artikli[j].artikal_naziv %></h2>
+                                                    </div>
+
+                                                    <div class="row p-1" style="font-size: larger">
+                                                        Kategorija: &nbsp; <span> <%= artikli[j].artikal_tip_lookup_naziv%></span>
+                                                    </div>
+
+                                                    <div class="row p-1" style="font-size: larger">
+                                                        Akcijska cijena: <%=artikli[j].artikal_cijena_akcija%> KM
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <% } else { %>
+                                    <div class="card text-white bg-primary mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                        <div class="card-body">
+
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <img src="/images/<%=artikli[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                                </div>
+
+                                                <div class="col-lg-6">
+
+                                                    <div class="row p-1">
+                                                        <h2><%= artikli[j].artikal_naziv %></h2>
+                                                    </div>
+
+                                                    <div class="row p-1" style="font-size: larger">
+                                                        Kategorija:&nbsp; <span> <%= artikli[j].artikal_tip_lookup_naziv%></span>
+                                                    </div>
+
+                                                    <div class="row p-1" style="font-size: larger">
+                                                        Cijena: <%=artikli[j].artikal_cijena%> KM
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+            </container>
+        </div>
+        <!----------------------------------------Drugi tab-------------------------------------------------------->
+        <div class="tab-pane fade" id="grupniMeniji" role="tabpanel" aria-labelledby="grupniMeniji-tab">
+            <container class="container-fluid container-sm">
+                <div class="row p-3">
+                    <div class="col justify-content-lg-center">
+
+                        <ul id="menijiLista" style="list-style-type:none;">
+                            <% for(let j = 0; j < meniji.length; j++) { %>
+                            <li>
+                                <div class="card text-white bg-primary mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                    <div class="card-body">
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <img src="/images/<%=meniji[j].grupni_meni_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                            </div>
+                                            <div class="col-lg-6">
+
+                                                <div class="row p-1">
+                                                    <h2><%= meniji[j].grupni_meni_naziv %></h2>
+                                                </div>
+
+                                                <div class="row p-1">
+                                                    <ul>
+                                                        <li>
+                                                            <%=meniji[j].grupni_meni_artikal1%>
+                                                        </li>
+                                                        <li>
+                                                            <%=meniji[j].grupni_meni_artikal2%>
+                                                        </li>
+                                                        <li>
+                                                            <%=meniji[j].grupni_meni_artikal3%>
+                                                        </li>
+                                                        <li>
+                                                            <%=meniji[j].grupni_meni_artikal4%>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="row p-1" style="font-size: larger">
+                                                    Cijena: <%= meniji[j].grupni_meni_cijena %> KM
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+            </container>
+        </div>
+        <!----------------------------------------Treći tab-------------------------------------------------------->
+        <div class="tab-pane fade" id="spisakAkcija" role="tabpanel" aria-labelledby="spisakAkcija-tab">
+            <container class="container-fluid container-sm">
+                <div class="row p-3">
+                    <div class="col justify-content-lg-center">
+                        <ul id="akcijeLista" style="list-style-type:none;">
+                            <% for(let j=0; j<akcije.length; j++) { %>
+                            <li>
+                                <div class="card text-white bg-danger mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <img src="/images/<%=akcije[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row p-1">
+                                                    <h2><%= akcije[j].artikal_naziv %></h2>
+                                                </div>
+                                                <div class="row p-1" style="font-size: larger">
+                                                    Kategorija: <%=akcije[j].artikal_tip_lookup_naziv%>
+                                                </div>
+                                                <div class="row p-1" style="font-size: larger">
+                                                    Akcijska cijena: <%=akcije[j].artikal_cijena_akcija%> KM
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+            </container>
+        </div>
+        <!----------------------------------------Četvrti tab------------------------------------------------------>
+        <div class="tab-pane fade" id="najpopularniji" role="tabpanel" aria-labelledby="najpopularniji-tab">
+            <container class="container-fluid container-sm">
+                <div class="row p-3">
+                    <div class="col justify-content-lg-center">
+
+                        <ul id="akcijeLista" style="list-style-type:none;">
+                            <% for(let j=0; j<najpopularniji.length; j++) { %>
+                            <li>
+                                <div class="card text-white bg-primary mb-3" style="width: 100%; max-width: 920px; margin: auto">
+
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <img src="/images/<%=najpopularniji[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                            </div>
+
+                                            <div class="col-lg-6">
+
+                                                <div class="row p-1">
+                                                    <h2><%= najpopularniji[j].artikal_naziv %></h2>
+                                                </div>
+
+                                                <div class="row p-1" style="font-size: larger">
+                                                    Kategorija: <%=najpopularniji[j].artikal_tip_lookup_naziv%>
+                                                </div>
+
+                                                <div class="row p-1" style="font-size: larger">
+                                                    Cijenaa: <%=najpopularniji[j].artikal_cijena%>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+                            <%} %>
+                        </ul>
+                    </div>
+                </div>
+            </container>
+        </div>
+        <!----------------------------------------Kraj tabova------------------------------------------------------>
+    </div>
+</container>
+
+<script type="text/javascript" src="/javascripts/refresh_slike.js"></script>
+
+</body>
+</html>
+
+

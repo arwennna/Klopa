@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>
+
+  <script type="text/javascript" src="/javascripts/superadmin_administracija_restorani.js"></script>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="icon" href="/images/ikonica.png">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="text-transform: uppercase">
+  <a class="navbar-brand" href="#"><i class="fas fa-utensils"></i> <%= title %></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/odjava"><i class="fas fa-sign-out-alt"></i> Odjava
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mojprofil"><i class="fas fa-user-circle"></i> Moj profil
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/glavna">Glavna</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<container class="container-fluid container-sm">
+  <div class="row">
+
+
+      <div id="accordion" style="width: 80%  !important; margin: auto">
+
+        <!-------------------------------------------------Dodavanje restorana----------------------------------------->
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Dodaj restoran
+              </button>
+            </h5>
+          </div>
+          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+
+              <div id="map" style="width: 100%; height: 530px;"></div>
+
+              <form action="/create/restoran" method="POST" id="forma_create_restoran" enctype="multipart/form-data">
+                <fieldset>
+                  <legend>Novi restoran</legend>
+
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="imeRestorana" placeholder="Naziv restorana" name="ime" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleSelect1">Tip restorana:</label>
+                    <select class="form-control" id="tipRestorana" name="tipRestorana">
+                      <% for(let j = 0; j < restorani_tip.length; j++) { %>
+                        <option value='<%= restorani_tip[j].restoran_tip_lookup_id%>' ><%= restorani_tip[j].restoran_tip_lookup_naziv%></option>
+                      <% } %>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="ulicaRestorana" placeholder="Ulica" name="ulica" required>
+                  </div>
+
+                  <div class="row">
+                    <div class="col col-sm-6">
+                      <input type="text" class="form-control" placeholder="Latituda" id="latituda" name="latituda" readonly="readonly" required>
+                    </div>
+                    <div class="col col-sm-6">
+                      <input type="text" class="form-control" placeholder="Longituda" id="longituda" name="longituda" readonly="readonly" required>
+                    </div>
+                  </div>
+
+                  <br>
+                  <fieldset class="form-group" required>
+                    <label>Broj zvjezdica:</label>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="ocjena" id="optionsRadios1" value="1">
+                        1
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="ocjena" id="optionsRadios2" value="2">
+                        2
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label ">
+                        <input type="radio" class="form-check-input" name="ocjena" id="optionsRadios3" value="3">
+                        3
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="ocjena" id="optionsRadios4" value="4">
+                        4
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="ocjena" id="optionsRadios5" value="5">
+                        5
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="myImage" id="myImage" accept="image/*">
+                        <label class="custom-file-label">Slika</label>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <button type="submit" class="btn btn-primary" id="dugmic" onclick="kreirajRestoran()">Unesi!</button>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-------------------------------------------------Izmjena restorana------------------------------------------->
+        <div class="card">
+          <div class="card-header" id="headingTwo">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Izmijeni restoran
+              </button>
+            </h5>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div class="card-body">
+
+              <form id="forma_update_restoran" method="post" action="/update/restoran" enctype="multipart/form-data">
+                <fieldset>
+                  <legend>Izmjena postojećeg restorana</legend>
+
+                  <div class="form-group">
+                    <label for="exampleSelect1">Restoran za izmjenu:</label>
+                    <select class="form-control" id="restoranUpdate" name="restoranUpdate">
+                      <% for(let j = 0; j < restorani.length; j++) { %>
+                        <option id="opcija<%= restorani[j].restoran_id%>" value='<%= restorani[j].restoran_id%>' ><%= restorani[j].restoran_naziv %></option>
+                      <% } %>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="nazivUpdate" placeholder="Naziv restorana" name="nazivUpdate" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleSelect1">Tip restorana:</label>
+                    <select class="form-control" id="tipUpdate" name="tipUpdate">
+                      <% for(let j = 0; j < restorani_tip.length; j++) { %>
+                        <option value='<%= restorani_tip[j].restoran_tip_lookup_id%>' ><%= restorani_tip[j].restoran_tip_lookup_naziv%></option>
+                      <% } %>
+                    </select>
+                  </div>
+
+                  <fieldset class="form-group" required>
+                    <label>Broj zvjezdica:</label>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="ocjenaUpdate" id="optionsRadios1" value="1">
+                        1
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="ocjenaUpdate" id="optionsRadios2" value="2">
+                        2
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label ">
+                        <input type="radio" class="form-check-input" name="ocjenaUpdate" id="optionsRadios3" value="3">
+                        3
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="ocjenaUpdate" id="optionsRadios4" value="4">
+                        4
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="ocjenaUpdate" id="optionsRadios5" value="5">
+                        5
+                      </label>
+                    </div>
+                    <div class="form-group">
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="myImage" accept="image/*">
+                        <label class="custom-file-label">Slika</label>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <button type="submit" class="btn btn-primary" id="dugmic">Izmijeni!</button>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-------------------------------------------------Brisanje restorana------------------------------------------>
+        <div class="card">
+          <div class="card-header" id="headingThree">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Obriši restoran
+              </button>
+            </h5>
+          </div>
+          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body">
+                <fieldset>
+                  <legend>Obriši restoran</legend>
+                  <div class="table-responsive-md">
+                    <table class="table">
+                      <tr>
+                        <th>Naziv</th>
+                        <th>Tip</th>
+                        <th>Obriši</th>
+                      </tr>
+                      <% for (let i = 0; i < restorani.length; i++) { %>
+                      <tr id="red<%=restorani[i].restoran_id%>">
+                        <td style="width: 33%"><%= restorani[i].restoran_naziv %></td>
+                        <td style="width: 33%"><%= restorani[i].restoran_tip_lookup_naziv %></td>
+                        <td style="width: 33%"><button type="button" class="btn btn-danger" onclick="obrisiRestoran(<%=restorani[i].restoran_id%>)">Obriši</button></td>
+                      </tr>
+                      <% } %>
+                    </table>
+                  </div>
+                </fieldset>
+            </div>
+          </div>
+        </div>
+        <!-------------------------------------------------Tipovi restorana-------------------------------------------->
+        <div class="card">
+          <div class="card-header" id="headingFour">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                Tipovi restorana
+              </button>
+            </h5>
+          </div>
+          <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+            <div class="card-body">
+              <fieldset>
+                <legend>Modifikuj tipove restorana</legend>
+                <div class="table-responsive-md">
+                  <table class="table">
+                    <tr>
+                      <th>Naziv</th>
+                      <th>Novi naziv</th>
+                      <th>Izmijeni</th>
+                      <th>Obriši</th>
+                    </tr>
+                    <% for (let i = 0; i < restorani_tip.length; i++) { %>
+                    <tr id="restorani_tip<%=restorani_tip[i].restoran_tip_lookup_id%>">
+                      <td style="width: 25%" id="val<%=restorani_tip[i].restoran_tip_lookup_id%>"><%= restorani_tip[i].restoran_tip_lookup_naziv %></td>
+                      <td style="width: 25%"><input class="form-control" id="input<%=restorani_tip[i].restoran_tip_lookup_id%>"/></td>
+                      <td style="width: 25%"><button type="button" class="btn btn-warning" onclick="izmijeniTipRestorana(<%=restorani_tip[i].restoran_tip_lookup_id%>)">Izmijeni</button></td>
+                      <td style="width: 25%"><button type="button" class="btn btn-danger" onclick="obrisiTipRestorana(<%=restorani_tip[i].restoran_tip_lookup_id%>)">Obriši</button></td>
+                    </tr>
+                    <% } %>
+                  </table>
+                </div>
+                <form method="post" action="/create/tip/restoran">
+                  <div class="form-group">
+                    <label>Novi tip:</label>
+                    <div class="row p-3">
+                      <div class="col">
+                        <input type="text" class="form-control" id="noviTipRestorana" placeholder="Naziv novog tipa restorana" name="noviTipRestorana" required>
+                      </div>
+                      <div class="col">
+                        <button type="submit" class="btn btn-success">Spasi</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+        <!-------------------------------------------------Tipovi artikala--------------------------------------------->
+        <div class="card">
+          <div class="card-header" id="headingFive">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                Tipovi artikala
+              </button>
+            </h5>
+          </div>
+          <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+            <div class="card-body">
+              <fieldset>
+                <legend>Modifikuj tipove artikala</legend>
+                <div class="table-responsive-md">
+                  <table class="table">
+                    <tr>
+                      <th>Naziv</th>
+                      <th>Novi naziv</th>
+                      <th>Izmijeni</th>
+                      <th>Obriši</th>
+                    </tr>
+                    <% for (var i = 0; i < artikli_tip.length; i++) { %>
+                    <tr id="artikli_tip<%=artikli_tip[i].artikal_tip_lookup_id%>">
+                      <td style="width: 25%" id="val_artikal_tip<%=artikli_tip[i].artikal_tip_lookup_id%>"><%= artikli_tip[i].artikal_tip_lookup_naziv %></td>
+                      <td style="width: 25%"><input class="form-control" id="input_artikal_tip<%=artikli_tip[i].artikal_tip_lookup_id%>" /></td>
+                      <td style="width: 25%"><button type="button" class="btn btn-warning" onclick="izmijeniTipArtikla(<%=artikli_tip[i].artikal_tip_lookup_id%>)">Izmijeni</button></td>
+                      <td style="width: 25%"><button type="button" class="btn btn-danger" onclick="obrisiTipArtikla(<%=artikli_tip[i].artikal_tip_lookup_id%>)">Obriši</button>
+                    </tr>
+                    <% } %>
+                  </table>
+                </div>
+                <form method="post" action="/create/tip/artikal">
+                  <div class="form-group">
+                    <label>Novi tip:</label>
+                    <div class="row p-3">
+                      <div class="col">
+                        <input type="text" class="form-control" id="noviTipArtikla" placeholder="Naziv novog tipa artikla" name="noviTipArtikla" required>
+                      </div>
+                      <div class="col">
+                        <button type="submit" class="btn btn-success">Spasi</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+        <!------------------------------------------------------------------------------------------------------------->
+      </div>
+  </div>
+</container>
+
+<div class="footer" style="margin-top: 180px">
+  <div class="container">
+    <div class="row p-1">
+      <div class="col-4 footer-link" >
+        <a href="https://twitter.com/Klopa_ba">
+          <i class="fab fa-twitter-square"></i>
+          Twitter
+        </a>
+      </div>
+      <div class="col-4 footer-link">
+        <a href="https://www.facebook.com/profile.php?id=100066673272409">
+          <i class="fab fa-facebook-square"></i>
+          Facebook
+        </a>
+      </div>
+      <div class="col-4 footer-link">
+        <a href="https://www.instagram.com/klopa.ba/">
+          <i class="fab fa-instagram"></i>
+          Instagram
+        </a>
+      </div>
+    </div>
+    <div class="row p-1">
+      <div class="col">
+        Copyright 2021 <i class="far fa-copyright"></i> <a href="https://www.linkedin.com/in/sara-farah-materne-2685141b3/">Sara-Farah Materne</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

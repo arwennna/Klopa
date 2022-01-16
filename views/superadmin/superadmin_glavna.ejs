@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/footer.css' />
+    <link rel="icon" href="/images/ikonica.png">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="text-transform: uppercase">
+      <a class="navbar-brand" href="#"><i class="fas fa-utensils"></i> <%= title %></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/odjava"><i class="fas fa-sign-out-alt"></i> Odjava
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/mojprofil"><i class="fas fa-user-circle"></i> Moj profil
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/administracija"> Administracija
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/chat"> Korisnička podrška
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/izvjestaj/superadmin"> Izvještaj
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="modal" data-target="#exampleModal"><i class="fab fa-twitter"></i>Novi Tweet
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <container class="container-fluid container-sm">
+      <div class="row p-3">
+        <div class="col justify-content-sm-center">
+
+          <ul id="restoraniLista" style="list-style-type:none;">
+            <% for(let j = 0; j < restorani.length; j++) { %>
+            <li>
+              <div class="card text-white bg-primary mb-3" style="max-width: 920px; width: 100%; margin: auto">
+                <div class="card-body">
+
+                  <div class="row">
+                    <div class="col-sm-4">
+
+                      <img src="/images/<%=restorani[j].restoran_slika%>" style="height: auto; max-width: 300px; width: 100%" alt="slikica"/>
+
+                    </div>
+
+                    <div class="col-sm-8">
+
+                      <div class="row p-1">
+                        <h2><a href="/superadmin/restoran/<%=restorani[j].restoran_id%>"><%= restorani[j].restoran_naziv %></a></h2>
+                      </div>
+
+                      <div class="row p-1" style="font-size: larger">
+                        Kategorija: <%=restorani[j].restoran_tip_lookup_naziv%>
+                      </div>
+
+                      <div class="row p-1" style="font-size: larger">
+                        Ocjena: <%=restorani[j].restoran_ocjena%>
+                      </div>
+
+                      <div class="row p-1" style="font-size: larger">
+                        Adresa: <%=restorani[j].restoran_ulica%>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </container>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-l modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel"><i class="fab fa-twitter"></i>Novi tweet</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <fieldset>
+              <legend>Novi tweet</legend>
+
+              <div class="form-group">
+                <textarea class="form-control" id="tweetTextArea" rows="4"></textarea>
+              </div>
+
+            </fieldset>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="zatvoriNoviTweet()">Zatvori</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="tweet()">Tweet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="/javascripts/superadmin_glavna.js"></script>
+    <script type="text/javascript" src="/javascripts/refresh_slike.js"></script>
+
+    <div class="footer">
+      <div class="container">
+        <div class="row p-1">
+          <div class="col-4 footer-link" >
+            <a href="https://twitter.com/Klopa_ba">
+              <i class="fab fa-twitter-square"></i>
+              Twitter
+            </a>
+          </div>
+          <div class="col-4 footer-link">
+            <a href="https://www.facebook.com/profile.php?id=100066673272409">
+              <i class="fab fa-facebook-square"></i>
+              Facebook
+            </a>
+          </div>
+          <div class="col-4 footer-link">
+            <a href="https://www.instagram.com/klopa.ba/">
+              <i class="fab fa-instagram"></i>
+              Instagram
+            </a>
+          </div>
+        </div>
+        <div class="row p-1">
+          <div class="col">
+            Copyright 2021 <i class="far fa-copyright"></i> <a href="https://www.linkedin.com/in/sara-farah-materne-2685141b3/">Sara-Farah Materne</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/footer.css' />
+    <link rel="icon" href="/images/ikonica.png">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="text-transform: uppercase;">
+<a class="navbar-brand" href="#"><i class="fas fa-utensils"></i> <%= title %></a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="/odjava"><i class="fas fa-sign-out-alt"></i> Odjava
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/mojprofil"><i class="fas fa-user-circle"></i> Moj profil
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/glavna"> Glavna
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/kupac/mojenarudzbe"><i class="fas fa-file-alt"></i> Moje narudžbe
+            </a>
+        </li>
+    </ul>
+</div>
+</nav>
+
+<% if (korisnik.korisnik_long == null) { %>
+    <container class="container-fluid container-sm">
+        <div class="card text-white bg-primary mb-3" style="width: 85%; margin: auto; min-height: 20rem">
+            <div class="card-header"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="card-body">
+                <h4 class="card-title" style="text-align: center"><a href="/adresa">Unesite Vašu adresu</a> kako biste mogli vidjeti dostupne restorane!</h4>
+
+            </div>
+        </div>
+    </container>
+<%} else if (korisnik.korisnik_long != null) {%>
+
+    <container class="container-fluid" >
+
+        <div class="row p-3" style="height: 260px; background-image: url('/images/banner.jpg'); opacity: 75%; background-size: cover; " >
+
+            <div class="col">
+                <div class="row p-3">
+                    <h1 style="color: white; "><%=restoran.restoran_naziv%></h1>
+                </div>
+
+                <div class="row p-3">
+                    <h3 style="color: white"><%=restoran.restoran_tip_lookup_naziv%></h3>
+                </div>
+
+                <div class="row p-3">
+                    <h3 style="color: white"><%=restoran.restoran_ulica%>, Sarajevo</h3>
+                </div>
+
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="sviArtikli-tab" data-toggle="tab" href="#sviArtikli" role="tab" aria-controls="sviArtikli" aria-selected="true" style="font-size: larger">Svi artikli</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="grupniMeniji-tab" data-toggle="tab" href="#grupniMeniji" role="tab" aria-controls="grupniMeniji" aria-selected="false" style="font-size: larger">Grupni meniji</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="spisakAkcija-tab" data-toggle="tab" href="#spisakAkcija" role="tab" aria-controls="spisakAkcija" aria-selected="false" style="font-size: larger">Spisak akcija</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="najpopularniji-tab" data-toggle="tab" href="#najpopularniji" role="tab" aria-controls="najpopularniji" aria-selected="false" style="font-size: larger">Najpopularnije</a>
+            </li>
+            <% if (temperatura != null && temperatura >= 20 && sezonski.length) { %>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="sezonski-tab" data-toggle="tab" href="#sezonski" role="tab" aria-controls="sezonski" aria-selected="false" style="font-size: larger">Na trenutnih <%=temperatura%>°C osvježite se uz našu ponudu!</a>
+                </li>
+            <% } else if (temperatura != null && temperatura < 10 && sezonski.length) { %>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="sezonski-tab" data-toggle="tab" href="#sezonski" role="tab" aria-controls="sezonski" aria-selected="false" style="font-size: larger">Na trenutnih <%=temperatura%>°C zagrijte se uz našu ponudu!</a>
+                </li>
+            <% }%>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <!----------------------------------------Prvi tab--------------------------------------------------------->
+            <div class="tab-pane fade show active" id="sviArtikli" role="tabpanel" aria-labelledby="sviArtikli-tab">
+                <container class="container-fluid container-sm">
+                    <div class="row p-3">
+                        <div class="col justify-content-lg-center">
+
+                            <div class="input-group" style="max-width: 55%; margin: auto">
+                                <legend>Pretraga po nazivu i kategoriji:</legend>
+                                <input class="form-control border-end-0 border rounded-pill" type="text" id="search_products" >
+                                <span class="input-group-append">
+                                <button class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                                </span>
+                            </div>
+
+                            <ul id="listaArtikala" style="list-style-type:none;">
+                                <% for(let j = 0; j < artikli.length; j++) { %>
+                                <li>
+                                    <% if(artikli[j].artikal_akcija) { %>
+                                        <div class="card text-white bg-danger mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                            <div class="card-header" style="font-size: x-large">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <btn onclick='dodajArtikalNarudzba("<%=artikli[j].artikal_naziv%>", "<%=artikli[j].artikal_cijena%>", "<%=artikli[j].artikal_akcija%>", "<%=artikli[j].artikal_cijena_akcija%>")' class="btn-outline-primary" ><i class="fas fa-plus-circle" style="color: white"></i></btn>
+                                                        Dodaj u narudžbu
+                                                    </div>
+                                                    <div class="col">
+                                                        <btn class="btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-shopping-cart" style="color: white"></i></btn>
+                                                        Moja narudžba
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <img src="/images/<%=artikli[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                                    </div>
+
+                                                    <div class="col-lg-6">
+
+                                                        <div class="row p-1">
+                                                            <h2><%= artikli[j].artikal_naziv %></h2>
+                                                        </div>
+
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Kategorija: &nbsp; <span> <%= artikli[j].artikal_tip_lookup_naziv%></span>
+                                                        </div>
+
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Akcijska cijena: <%=artikli[j].artikal_cijena_akcija%> KM
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                            <div class="card text-white bg-primary mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                                <div class="card-header" style="font-size: x-large">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <btn onclick='dodajArtikalNarudzba("<%=artikli[j].artikal_naziv%>", "<%=artikli[j].artikal_cijena%>", "<%=artikli[j].artikal_akcija%>", "<%=artikli[j].artikal_cijena_akcija%>")' class="btn-outline-primary" ><i class="fas fa-plus-circle" style="color: white"></i></btn>
+                                                            Dodaj u narudžbu
+                                                        </div>
+                                                        <div class="col">
+                                                            <btn class="btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-shopping-cart" style="color: white"></i></btn>
+                                                            Moja narudžba
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <img src="/images/<%=artikli[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+
+                                                            <div class="row p-1">
+                                                                <h2><%= artikli[j].artikal_naziv %></h2>
+                                                            </div>
+
+                                                            <div class="row p-1" style="font-size: larger">
+                                                                Kategorija:&nbsp; <span> <%= artikli[j].artikal_tip_lookup_naziv%></span>
+                                                            </div>
+
+                                                            <div class="row p-1" style="font-size: larger">
+                                                                Cijena: <%=artikli[j].artikal_cijena%> KM
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                    <% } %>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                </container>
+            </div>
+            <!----------------------------------------Drugi tab-------------------------------------------------------->
+            <div class="tab-pane fade" id="grupniMeniji" role="tabpanel" aria-labelledby="grupniMeniji-tab">
+                <container class="container-fluid container-sm">
+                    <div class="row p-3">
+                        <div class="col justify-content-lg-center">
+
+                            <ul id="menijiLista" style="list-style-type:none;">
+                                <% for(var j = 0; j < meniji.length; j++) { %>
+                                    <li>
+                                        <div class="card text-white bg-primary mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                            <div class="card-header" style="font-size: x-large">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <btn onclick='dodajMeniNarudzba("<%=meniji[j].grupni_meni_naziv%>", "<%=meniji[j].grupni_meni_cijena%>")' class="btn-outline-primary" ><i class="fas fa-plus-circle" style="color: white"></i></btn>
+                                                        Dodaj u narudžbu
+                                                    </div>
+                                                    <div class="col">
+                                                        <btn class="btn-outline-primary" data-toggle="modal" data-target="#exampleModal" ><i class="fas fa-shopping-cart" style="color: white"></i></btn>
+                                                        Moja narudžba
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <img src="/images/<%=meniji[j].grupni_meni_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                                    </div>
+                                                    <div class="col-lg-6">
+
+                                                        <div class="row p-1">
+                                                            <h2><%= meniji[j].grupni_meni_naziv %></h2>
+                                                        </div>
+
+                                                        <div class="row p-1">
+                                                            <ul>
+                                                                <li>
+                                                                    <%=meniji[j].grupni_meni_artikal1%>
+                                                                </li>
+                                                                <li>
+                                                                    <%=meniji[j].grupni_meni_artikal2%>
+                                                                </li>
+                                                                <li>
+                                                                    <%=meniji[j].grupni_meni_artikal3%>
+                                                                </li>
+                                                                <li>
+                                                                    <%=meniji[j].grupni_meni_artikal4%>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Cijena: <%= meniji[j].grupni_meni_cijena %> KM
+                                                        </div>
+
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                            </ul>
+                        </div>
+                    </div>
+                </container>
+            </div>
+            <!----------------------------------------Treći tab-------------------------------------------------------->
+            <div class="tab-pane fade" id="spisakAkcija" role="tabpanel" aria-labelledby="spisakAkcija-tab">
+                <container class="container-fluid container-sm">
+                    <div class="row p-3">
+                        <div class="col justify-content-lg-center">
+                            <ul id="akcijeLista" style="list-style-type:none;">
+                                <% for(let j=0; j<akcije.length; j++) { %>
+                                    <li>
+                                        <div class="card text-white bg-danger mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                            <div class="card-header" style="font-size: x-large">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <btn onclick='dodajArtikalNarudzba("<%=artikli[j].artikal_naziv%>", "<%=artikli[j].artikal_cijena%>", "<%=artikli[j].artikal_akcija%>", "<%=artikli[j].artikal_cijena_akcija%>")' class="btn-outline-primary" ><i class="fas fa-plus-circle" style="color: white"></i></btn>
+                                                        Dodaj u narudžbu
+                                                    </div>
+                                                    <div class="col">
+                                                        <btn class="btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-shopping-cart" style="color: white"></i></btn>
+                                                        Moja narudžba
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <img src="/images/<%=akcije[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="row p-1">
+                                                            <h2><%= akcije[j].artikal_naziv %></h2>
+                                                        </div>
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Kategorija: <%=akcije[j].artikal_tip_lookup_naziv%>
+                                                        </div>
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Akcijska cijena: <%=akcije[j].artikal_cijena_akcija%> KM
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                </container>
+            </div>
+            <!----------------------------------------Četvrti tab------------------------------------------------------>
+            <div class="tab-pane fade" id="najpopularniji" role="tabpanel" aria-labelledby="najpopularniji-tab">
+                <container class="container-fluid container-sm">
+                    <div class="row p-3">
+                        <div class="col justify-content-lg-center">
+
+                            <ul id="akcijeLista" style="list-style-type:none;">
+                                <% for(let j=0; j<najpopularniji.length; j++) { %>
+                                    <li>
+                                        <div class="card text-white bg-primary mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                            <div class="card-header" style="font-size: x-large">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <btn onclick='dodajArtikalNarudzba("<%=artikli[j].artikal_naziv%>", "<%=artikli[j].artikal_cijena%>", "<%=artikli[j].artikal_akcija%>", "<%=artikli[j].artikal_cijena_akcija%>")' class="btn-outline-primary" ><i class="fas fa-plus-circle" style="color: white"></i></btn>
+                                                        Dodaj u narudžbu
+                                                    </div>
+                                                    <div class="col">
+                                                        <btn class="btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-shopping-cart" style="color: white"></i></btn>
+                                                        Moja narudžba
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <img src="/images/<%=najpopularniji[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                                    </div>
+
+                                                    <div class="col-lg-6">
+
+                                                        <div class="row p-1">
+                                                            <h2><%= najpopularniji[j].artikal_naziv %></h2>
+                                                        </div>
+
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Kategorija: <%=najpopularniji[j].artikal_tip_lookup_naziv%>
+                                                        </div>
+
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Cijena: <%=najpopularniji[j].artikal_cijena%>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                </container>
+            </div>
+            <!----------------------------------------Sezonski tab----------------------------------------------------->
+
+            <% if (temperatura != null && temperatura >= 20 && sezonski.length) { %>
+                <div class="tab-pane fade" id="sezonski" role="tabpanel" aria-labelledby="sezonski-tab">
+                    <container class="container-fluid container-sm">
+                        <div class="row p-3">
+                            <div class="col justify-content-lg-center">
+
+                                <ul id="sezonskiLista" style="list-style-type:none;">
+                                    <% for(let j=0; j<sezonski.length; j++) { %>
+                                    <li>
+                                        <div class="card text-white bg-primary mb-3" style="width: 100%; max-width: 920px; margin: auto">
+                                            <div class="card-header" style="font-size: x-large">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <btn onclick='dodajArtikalNarudzba("<%=sezonski[j].artikal_naziv%>", "<%=sezonski[j].artikal_cijena%>", "<%=sezonski[j].artikal_akcija%>", "<%=sezonski[j].artikal_cijena_akcija%>")' class="btn-outline-primary" ><i class="fas fa-plus-circle" style="color: white"></i></btn>
+                                                        Dodaj u narudžbu
+                                                    </div>
+                                                    <div class="col">
+                                                        <btn class="btn-outline-primary" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-shopping-cart" style="color: white"></i></btn>
+                                                        Moja narudžba
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <img src="/images/<%=sezonski[j].artikal_slika%>" style="height: auto; max-width: 400px; width: 100%" alt="slikica"/>
+                                                    </div>
+
+                                                    <div class="col-lg-6">
+
+                                                        <div class="row p-1">
+                                                            <h2><%= sezonski[j].artikal_naziv %></h2>
+                                                        </div>
+
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Kategorija: <%=sezonski[j].artikal_tip_lookup_naziv%>
+                                                        </div>
+
+                                                        <div class="row p-1" style="font-size: larger">
+                                                            Cijena: <%=sezonski[j].artikal_cijena%>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        </div>
+                    </container>
+                </div>
+            <% } %>
+        </div>
+    </container>
+<%} %>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-shopping-cart"></i>Moja narudžba</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <fieldset>
+                    <legend>Moja korpa</legend>
+
+                    <table class="table" id="tabela-narudzbe">
+                        <tr>
+                            <th>Artikal</th>
+                            <th>Cijena</th>
+                            <th>Obriši</th>
+                        </tr>
+
+                    </table>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Detalji narudžbe</legend>
+
+                    <div style="font-size: larger">
+                        Iznos (KM):
+                        <span id="cijenaVrij">
+
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Način plaćanja</label>
+                        <select class="form-control" id="nacinPlacanja" name="nacinPlacanja" required>
+                            <option value='Gotovina'>Gotovina</option>
+                            <option value='Kartica'>Kartica</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Vrijeme dostave</label>
+                        <input type="time" id="vrijemeDostave" name="vrijemeDostave"/>
+                    </div>
+
+                </fieldset>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="zatvoriModal()">Zatvori</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick='finalizirajNarudzbu("<%=korisnik.korisnik_id%>", "<%=restoran.restoran_id%>")'>Naruči</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="container">
+        <div class="row p-1">
+            <div class="col-4 footer-link" >
+                <a href="https://twitter.com/Klopa_ba">
+                    <i class="fab fa-twitter-square"></i>
+                    Twitter
+                </a>
+            </div>
+            <div class="col-4 footer-link">
+                <a href="https://www.facebook.com/profile.php?id=100066673272409">
+                    <i class="fab fa-facebook-square"></i>
+                    Facebook
+                </a>
+            </div>
+            <div class="col-4 footer-link">
+                <a href="https://www.instagram.com/klopa.ba/">
+                    <i class="fab fa-instagram"></i>
+                    Instagram
+                </a>
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col">
+                Copyright 2021 <i class="far fa-copyright"></i> <a href="https://www.linkedin.com/in/sara-farah-materne-2685141b3/">Sara-Farah Materne</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/javascripts/refresh_slike.js"></script>
+
+<script type="text/javascript" src="/javascripts/kupac_restoran.js"></script>
+</body>
+</html>
+
+
